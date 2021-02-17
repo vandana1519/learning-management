@@ -6,6 +6,10 @@ import org.springframework.stereotype.Repository;
 import com.hackathon.learningmanagement.entity.UserRegistration;
 
 @Repository
-public interface UserRepository extends JpaRepository<UserRegistration, Long>{
+public interface UserRepository extends JpaRepository<UserRegistration, Long> {
+
+	public UserRegistration findByUserIdAndPassword(Long userId, String password);
+
+	public UserRegistration findByUserId(Long userId);
 
 }

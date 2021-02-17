@@ -24,7 +24,7 @@ public class CourseDetails {
 	private LocalDate startDate;
 	private LocalDate endDate;
 
-	@ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@ManyToOne()
 	@JoinColumn(name = "category_id", referencedColumnName = "categoryId", nullable = false, insertable = false, updatable = false)
 	Category category;
 

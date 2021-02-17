@@ -42,13 +42,9 @@ public class LearningController {
 	}
 	
 	@GetMapping(value = "/courses/{userId}")
-	public ResponseEntity getCourseDetails(@PathVariable("userId") Long userId, @RequestParam(value ="courseName") String courseName, @RequestParam(value = "categoryName", required = false) String categoryName){
-		List<CourseDetails> courseDetails;
-		try {
-			courseDetails =  learningService.getCourseDetails(userId, courseName, categoryName);
-		} catch (NotFoundException e) {
-			return new ResponseEntity<>(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
-		}
-		return new ResponseEntity<>(courseDetails, HttpStatus.OK);
+	public List getCourseDetails(@PathVariable("userId") Long userId, @RequestParam(value ="courseName", required = false) String courseName, @RequestParam(value = "categoryName", required = false) String categoryName) throws NotFoundException{
+	
+			return  learningService.getCourseDetails(userId, courseName, categoryName);
+		
 	}
 }

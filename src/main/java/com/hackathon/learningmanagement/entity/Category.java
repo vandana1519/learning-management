@@ -1,10 +1,18 @@
 package com.hackathon.learningmanagement.entity;
 
+import java.util.List;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 @Entity
 @Table(name = "category")
@@ -15,6 +23,26 @@ public class Category {
 	private Long categoryId;
 
 	private String categoryName;
+	
+	@OneToMany(mappedBy="category")
+	@JsonIgnore
+	private List<CourseDetails> course;
+	
+	public Category() {}
+
+	public Category(Long categoryId, String categoryName) {
+		super();
+		this.categoryId = categoryId;
+		this.categoryName = categoryName;
+	}
+
+	public List<CourseDetails> getCourse() {
+		return course;
+	}
+
+	public void setCourse(List<CourseDetails> course) {
+		this.course = course;
+	}
 
 	public Long getCategoryId() {
 		return categoryId;

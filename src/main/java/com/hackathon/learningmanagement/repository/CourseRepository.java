@@ -1,3 +1,4 @@
+
 package com.hackathon.learningmanagement.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -9,3 +10,5 @@ import com.hackathon.learningmanagement.entity.CourseDetails;
 public interface CourseRepository extends JpaRepository<CourseDetails, Long>{
 
 }
+
+

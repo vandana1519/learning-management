@@ -1,3 +1,4 @@
+
 package com.hackathon.learningmanagement.service;
 
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
@@ -11,3 +12,4 @@ public interface LearningService {
 	public String loginUser(Long userId, String password) throws NotFoundException;
 
 }
+

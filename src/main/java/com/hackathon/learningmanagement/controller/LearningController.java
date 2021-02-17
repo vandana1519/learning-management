@@ -36,5 +36,4 @@ public class LearningController {
 		}
 		return new ResponseEntity<>(loginUserResponse, HttpStatus.OK);
 	}
-
 }

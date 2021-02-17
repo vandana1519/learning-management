@@ -14,8 +14,6 @@ public class UserRegistration {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
 
-	private String userName;
-
 	private Long userName;
 
 	private String password;
@@ -28,11 +26,11 @@ public class UserRegistration {
 		this.userId = userId;
 	}
 
-	public String getUserName() {
+	public Long getUserName() {
 		return userName;
 	}
 
-	public void setUserName(String userName) {
+	public void setUserName(Long userName) {
 		this.userName = userName;
 	}
 

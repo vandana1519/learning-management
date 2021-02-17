@@ -8,6 +8,7 @@ import com.hackathon.learningmanagement.exception.NotFoundException;
 public interface LearningService {
 
 	public UserRegistrationDto registerUser(UserRegistration userRegistration);
+
 	public String loginUser(Long userId, String password) throws NotFoundException;
 
 }

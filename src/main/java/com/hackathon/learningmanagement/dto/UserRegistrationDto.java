@@ -1,10 +1,8 @@
-
 package com.hackathon.learningmanagement.dto;
 
 public class UserRegistrationDto {
-
-	private Long userId;
 	
+	private Long userId;
 
 	public Long getUserId() {
 		return userId;
@@ -13,6 +11,8 @@ public class UserRegistrationDto {
 	public void setUserId(Long userId) {
 		this.userId = userId;
 	}
+	
+	
 
 }
 

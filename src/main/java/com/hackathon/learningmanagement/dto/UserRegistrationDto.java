@@ -1,3 +1,4 @@
+
 package com.hackathon.learningmanagement.dto;
 
 public class UserRegistrationDto {
@@ -14,3 +15,4 @@ public class UserRegistrationDto {
 	}
 
 }
+

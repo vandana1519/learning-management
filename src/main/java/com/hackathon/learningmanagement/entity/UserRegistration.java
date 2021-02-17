@@ -13,7 +13,11 @@ public class UserRegistration {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long userId;
+
 	private String userName;
+
+	private Long userName;
+
 	private String password;
 
 	public Long getUserId() {

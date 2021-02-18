@@ -12,8 +12,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.CourseDetails;
+import com.hackathon.learningmanagement.entity.EnrollmentDetails;
 import com.hackathon.learningmanagement.entity.UserRegistration;
 import com.hackathon.learningmanagement.exception.NotFoundException;
 import com.hackathon.learningmanagement.service.LearningService;
@@ -40,11 +42,25 @@ public class LearningController {
 		}
 		return new ResponseEntity<>(loginUserResponse, HttpStatus.OK);
 	}
-	
+
 	@GetMapping(value = "/courses/{userId}")
-	public List getCourseDetails(@PathVariable("userId") Long userId, @RequestParam(value ="courseName", required = false) String courseName, @RequestParam(value = "categoryName", required = false) String categoryName) throws NotFoundException{
-	
-			return  learningService.getCourseDetails(userId, courseName, categoryName);
-		
+	public List getCourseDetails(@PathVariable("userId") Long userId,
+			@RequestParam(value = "courseName", required = false) String courseName,
+			@RequestParam(value = "categoryName", required = false) String categoryName) throws NotFoundException {
+
+		return learningService.getCourseDetails(userId, courseName, categoryName);
+
+	}
+
+	@PostMapping(value = "/enroll/{userId}")
+	public ResponseEntity enrollCourse(@PathVariable("userId") Long userId,
+			@RequestParam("courseId") Long courseId) {
+		CourseEnrollmentDto dto = new CourseEnrollmentDto();
+		try {
+			dto = learningService.enrollCourse(userId, courseId);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
+		}
+		return new ResponseEntity<>(dto, HttpStatus.CREATED);
 	}
 }

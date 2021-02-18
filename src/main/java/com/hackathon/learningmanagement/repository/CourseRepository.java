@@ -19,6 +19,8 @@ public interface CourseRepository extends JpaRepository<CourseDetails, Long>{
 	
 	@Query(value = "select * from course_details where category_id = :categoryId and course_name like :courseName", nativeQuery = true)
 	public List<CourseDetails> getCourseDetailsByCategoryIdAndCourseName(String courseName, Long categoryId);
+	
+	public CourseDetails findByCourseId(Long courseId);
 
 }
 

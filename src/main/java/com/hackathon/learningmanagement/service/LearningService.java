@@ -5,6 +5,7 @@ import java.util.List;
 
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.CourseDetails;
 import com.hackathon.learningmanagement.entity.UserRegistration;
@@ -17,6 +18,8 @@ public interface LearningService {
 	public String loginUser(Long userId, String password) throws NotFoundException;
 	
 	public List<CourseDetails> getCourseDetails(Long userId, String courseName, String categoryName) throws NotFoundException;
+
+	public CourseEnrollmentDto enrollCourse(Long userId, Long courseId) throws NotFoundException;
 
 }
 

@@ -42,9 +42,6 @@ public class LearningServiceImpl implements LearningService {
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
 
-	@Autowired
-	EnrollmentRepository enrollmentRepository;
-
 	@Override
 	public UserRegistrationDto registerUser(UserRegistration userRegistration) {
 		UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
@@ -155,7 +152,7 @@ public class LearningServiceImpl implements LearningService {
 		}
 
 		return enrollmentDto;
-
+	}
 	public List<TrainingHistoryDto> getTrainingHistory(Long userId) {
 
 		List<TrainingHistoryDto> trainingHistoryDtoList = new ArrayList<>();

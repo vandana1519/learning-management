@@ -1,20 +1,18 @@
 package com.hackathon.learningmanagement.service.impl;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-
 import com.hackathon.learningmanagement.constants.AppConstants;
 import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
-
 import com.hackathon.learningmanagement.dto.TrainingHistoryDto;
-
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.Category;
 import com.hackathon.learningmanagement.entity.CourseDetails;
@@ -30,6 +28,8 @@ import com.hackathon.learningmanagement.service.LearningService;
 @Service
 public class LearningServiceImpl implements LearningService {
 
+	private static final Logger LOGGER = LoggerFactory.getLogger(LearningServiceImpl.class);
+
 	@Autowired
 	UserRepository userRepository;
 
@@ -38,7 +38,7 @@ public class LearningServiceImpl implements LearningService {
 
 	@Autowired
 	CategoryRepository categoryRepository;
-	
+
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
 
@@ -47,6 +47,7 @@ public class LearningServiceImpl implements LearningService {
 		UserRegistrationDto userRegistrationDto = new UserRegistrationDto();
 		UserRegistration registerResponse = userRepository.save(userRegistration);
 		userRegistrationDto.setUserId(registerResponse.getUserId());
+		LOGGER.info("User registered successfully with userId : {}", registerResponse.getUserId());
 		return userRegistrationDto;
 	}
 
@@ -55,11 +56,14 @@ public class LearningServiceImpl implements LearningService {
 		UserRegistration userRegistration = userRepository.findByUserIdAndPassword(userId, password);
 		UserRegistration user = userRepository.findByUserId(userId);
 		if (user == null) {
+			LOGGER.error("User not found for userId : {}",userId);			
 			throw new NotFoundException("User not found,please register!!!");
 		}
 		if (userRegistration == null) {
+			LOGGER.error("User id and password mismatch");	
 			throw new NotFoundException("User id and password mismatch!!!");
 		}
+		LOGGER.info("Login Successful for userId : {}, userId");
 		return "Login Successfull!!";
 	}
 
@@ -69,9 +73,11 @@ public class LearningServiceImpl implements LearningService {
 		List<CourseDetails> courseDetailsList = new ArrayList<>();
 
 		if (userRepository.findByUserId(userId) == null) {
+			LOGGER.error("User not found for userId : {}", userId);
 			throw new NotFoundException("User not found, Please register!!!");
 		}
 		if (categoryName == null) {
+			LOGGER.info("Category name not found in the request");
 			return courseRepository.findByCourseNameContainingIgnoreCase(courseName);
 		} else {
 
@@ -88,6 +94,7 @@ public class LearningServiceImpl implements LearningService {
 				}
 
 			}
+			LOGGER.info("Returning course details list");
 			return courseDetailsList;
 		}
 	}
@@ -104,22 +111,24 @@ public class LearningServiceImpl implements LearningService {
 		List<EnrollmentDetails> enrollmentDetailsList = new ArrayList<>();
 
 		if (userRegistration == null) {
+			LOGGER.error("User not found for userId : {}",userId);
 			throw new NotFoundException("User not found, Please register!!!");
 		}
 
 		if (courseRepository.findByCourseId(courseId) == null) {
+			LOGGER.error("Course not found for courseId : {}",courseId);
 			throw new NotFoundException("Course not found!!!");
 		}
 
 		if (enrollmentRepository.getEnrollmentByUserIdAndCourseId(userId, courseId) != null) {
+			LOGGER.error("User already enrolled for this course earlier!!");
 			throw new NotFoundException("User already enrolled for this course earlier!!");
 		}
 		courseDetails = courseRepository.findByCourseId(courseId);
-		System.out.println("Course::" + courseDetails.getCourseName());
-
 		Long days = ChronoUnit.DAYS.between(courseDetails.getStartDate(), courseDetails.getEndDate());
 		Long startdays = ChronoUnit.DAYS.between(LocalDate.now(), courseDetails.getStartDate());
 		if (startdays < 2) {
+			LOGGER.error("Cannot enroll as duration must be greater than 2 days!!");
 			throw new NotFoundException("Cannot enroll as duration must be greater than 2 days!!");
 		}
 
@@ -133,6 +142,7 @@ public class LearningServiceImpl implements LearningService {
 					|| courseDetails.getStartDate().isAfter(enrolledStartDate)
 							&& courseDetails.getEndDate().isBefore(enrolledEndDate)) {
 
+				LOGGER.error("Already enrolled for other course for this duration!!!");
 				throw new NotFoundException("Already enrolled for other course for this duration!!");
 			}
 
@@ -148,6 +158,7 @@ public class LearningServiceImpl implements LearningService {
 			enrollmentDetails = enrollmentRepository.save(enrollmentDetails);
 			enrollmentDto.setEnrollmentId(enrollmentDetails.getEnrollmentId());
 		} else {
+			LOGGER.error("Cannot enroll as duration must be less than 30 days!!");
 			throw new NotFoundException("Cannot enroll as duration must be less than 30 days!!");
 		}
 
@@ -160,6 +171,7 @@ public class LearningServiceImpl implements LearningService {
 		List<EnrollmentDetails> enrollmentList = enrollmentRepository.getTrainingHistoryByUserId(userId);
 
 		if (!enrollmentList.isEmpty()) {
+			LOGGER.info("Fetched enrollment list for the userId : {}", userId);
 			for (EnrollmentDetails enrollment : enrollmentList) {
 				TrainingHistoryDto trainingHistoryDto = new TrainingHistoryDto();
 				trainingHistoryDto.setCourseId(enrollment.getCourseDetails().getCourseId());
@@ -167,6 +179,7 @@ public class LearningServiceImpl implements LearningService {
 				trainingHistoryDtoList.add(trainingHistoryDto);
 			}
 		} else {
+			LOGGER.error("Training history not found for userId : {}", userId);
 			throw new NotFoundException("Training history not found!!");
 		}
 		return trainingHistoryDtoList;

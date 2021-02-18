@@ -21,6 +21,9 @@ public interface CourseRepository extends JpaRepository<CourseDetails, Long>{
 	public List<CourseDetails> getCourseDetailsByCategoryIdAndCourseName(String courseName, Long categoryId);
 	
 	public CourseDetails findByCourseId(Long courseId);
+	
+	@Query(value = "select * from course_details where course_id = :courseId", nativeQuery = true)
+	public CourseDetails getEnrolledCourseId(Long courseId);
 
 }
 

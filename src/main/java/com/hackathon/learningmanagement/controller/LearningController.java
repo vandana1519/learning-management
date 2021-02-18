@@ -50,7 +50,7 @@ public class LearningController {
 	}
 
 	@GetMapping(value = "/courses/{userId}")
-	public ResponseEntity<?> getCourseDetails(@PathVariable("userId") Long userId,
+	public ResponseEntity getCourseDetails(@PathVariable("userId") Long userId,
 			@RequestParam(value = "courseName", required = false) String courseName,
 			@RequestParam(value = "categoryName", required = false) String categoryName) {
 
@@ -66,7 +66,7 @@ public class LearningController {
 	}
 
 	@PostMapping(value = "/enroll/{userId}")
-	public ResponseEntity<?> enrollCourse(@PathVariable("userId") Long userId,
+	public ResponseEntity enrollCourse(@PathVariable("userId") Long userId,
 			@RequestParam("courseId") Long courseId) {
 		CourseEnrollmentDto dto = new CourseEnrollmentDto();
 		try {
@@ -80,7 +80,7 @@ public class LearningController {
 	}
 	
 	@GetMapping(value = "/history/{userId}")
-	public ResponseEntity<?> getTrainingHistory(@PathVariable("userId") Long userId) throws NotFoundException {
+	public ResponseEntity getTrainingHistory(@PathVariable("userId") Long userId) throws NotFoundException {
 
 		List<TrainingHistoryDto> trainingHistoryDtoList = new ArrayList<>();
 		try {

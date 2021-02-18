@@ -23,12 +23,9 @@ public interface LearningService {
 	
 	public List<CourseDetails> getCourseDetails(Long userId, String courseName, String categoryName) throws NotFoundException;
 
-
 	public CourseEnrollmentDto enrollCourse(Long userId, Long courseId) throws NotFoundException;
 
-
-	
-	public List<TrainingHistoryDto>  getTrainingHistory(Long userId);
+	public List<TrainingHistoryDto>  getTrainingHistory(Long userId) throws NotFoundException;
 
 }
 

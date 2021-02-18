@@ -1,5 +1,6 @@
 package com.hackathon.learningmanagement.controller;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,10 +17,8 @@ import org.springframework.web.bind.annotation.RestController;
 import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
 
 import com.hackathon.learningmanagement.dto.TrainingHistoryDto;
-
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.CourseDetails;
-import com.hackathon.learningmanagement.entity.EnrollmentDetails;
 import com.hackathon.learningmanagement.entity.UserRegistration;
 import com.hackathon.learningmanagement.exception.NotFoundException;
 import com.hackathon.learningmanagement.service.LearningService;
@@ -31,8 +30,8 @@ public class LearningController {
 	LearningService learningService;
 
 	@PostMapping("/register")
-	public UserRegistrationDto registerUser(@RequestBody UserRegistration userRegistration) {
-		return learningService.registerUser(userRegistration);
+	public ResponseEntity<UserRegistrationDto> registerUser(@RequestBody UserRegistration userRegistration) {
+		return new ResponseEntity<>(learningService.registerUser(userRegistration),HttpStatus.CREATED);
 
 	}
 
@@ -48,16 +47,21 @@ public class LearningController {
 	}
 
 	@GetMapping(value = "/courses/{userId}")
-	public List getCourseDetails(@PathVariable("userId") Long userId,
+	public ResponseEntity<?> getCourseDetails(@PathVariable("userId") Long userId,
 			@RequestParam(value = "courseName", required = false) String courseName,
-			@RequestParam(value = "categoryName", required = false) String categoryName) throws NotFoundException {
+			@RequestParam(value = "categoryName", required = false) String categoryName) {
 
-		return learningService.getCourseDetails(userId, courseName, categoryName);
-
+		List<CourseDetails> courseDetailsList = new ArrayList<>();
+		try {
+			courseDetailsList= learningService.getCourseDetails(userId, courseName, categoryName);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.EXPECTATION_FAILED);
+		}
+		return new ResponseEntity<>(courseDetailsList,HttpStatus.OK);
 	}
 
 	@PostMapping(value = "/enroll/{userId}")
-	public ResponseEntity enrollCourse(@PathVariable("userId") Long userId,
+	public ResponseEntity<?> enrollCourse(@PathVariable("userId") Long userId,
 			@RequestParam("courseId") Long courseId) {
 		CourseEnrollmentDto dto = new CourseEnrollmentDto();
 		try {
@@ -69,10 +73,15 @@ public class LearningController {
 	}
 	
 	@GetMapping(value = "/history/{userId}")
-	public ResponseEntity<List<TrainingHistoryDto>> getTrainingHistory(@PathVariable("userId") Long userId) throws NotFoundException{
-	
-			return  new ResponseEntity<>(learningService.getTrainingHistory(userId),HttpStatus.OK);
-		
+	public ResponseEntity<?> getTrainingHistory(@PathVariable("userId") Long userId) throws NotFoundException {
+
+		List<TrainingHistoryDto> trainingHistoryDtoList = new ArrayList<>();
+		try {
+			trainingHistoryDtoList = learningService.getTrainingHistory(userId);
+		} catch (NotFoundException e) {
+			return new ResponseEntity<>(e.getMessage(), HttpStatus.NOT_FOUND);
+		}
+		return new ResponseEntity<>(trainingHistoryDtoList, HttpStatus.OK);
 	}
 	
 	

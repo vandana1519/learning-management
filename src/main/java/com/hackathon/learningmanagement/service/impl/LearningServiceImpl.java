@@ -53,13 +53,14 @@ public class LearningServiceImpl implements LearningService {
 
 	@Override
 	public String loginUser(Long userId, String password) throws NotFoundException {
-		UserRegistration userRegistration = userRepository.findByUserIdAndPassword(userId, password);
 		UserRegistration user = userRepository.findByUserId(userId);
+		UserRegistration checkCredentials = userRepository.findByUserIdAndPassword(userId, password);
+		
 		if (user == null) {
-			LOGGER.error("User not found for userId : {}",userId);			
+			LOGGER.error("User not found for the userId : {}",userId);			
 			throw new NotFoundException("User not found,please register!!!");
 		}
-		if (userRegistration == null) {
+		if (checkCredentials == null) {
 			LOGGER.error("User id and password mismatch");	
 			throw new NotFoundException("User id and password mismatch!!!");
 		}
@@ -73,11 +74,11 @@ public class LearningServiceImpl implements LearningService {
 		List<CourseDetails> courseDetailsList = new ArrayList<>();
 
 		if (userRepository.findByUserId(userId) == null) {
-			LOGGER.error("User not found for userId : {}", userId);
+			LOGGER.error("Invalid userID : {}", userId);
 			throw new NotFoundException("User not found, Please register!!!");
 		}
 		if (categoryName == null) {
-			LOGGER.info("Category name not found in the request");
+			LOGGER.info("Category name not found in the request body");
 			return courseRepository.findByCourseNameContainingIgnoreCase(courseName);
 		} else {
 
@@ -111,7 +112,7 @@ public class LearningServiceImpl implements LearningService {
 		List<EnrollmentDetails> enrollmentDetailsList = new ArrayList<>();
 
 		if (userRegistration == null) {
-			LOGGER.error("User not found for userId : {}",userId);
+			LOGGER.error("UserId Invalid : {}",userId);
 			throw new NotFoundException("User not found, Please register!!!");
 		}
 
@@ -135,7 +136,7 @@ public class LearningServiceImpl implements LearningService {
 		enrollmentDetailsList = enrollmentRepository.getEnrollmentDetailsByUserIdAndStatus(userId);
 		for (EnrollmentDetails enroll : enrollmentDetailsList) {
 			Long enrolledCourseId = enroll.getCourseDetails().getCourseId();
-			enrolledCourseDetails = courseRepository.findByCourseId(enrolledCourseId);
+			enrolledCourseDetails = courseRepository.getEnrolledCourseId(enrolledCourseId);
 			LocalDate enrolledStartDate = enrolledCourseDetails.getStartDate();
 			LocalDate enrolledEndDate = enrolledCourseDetails.getEndDate();
 			if (enrolledStartDate == courseDetails.getStartDate()

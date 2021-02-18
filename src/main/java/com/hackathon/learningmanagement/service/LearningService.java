@@ -3,13 +3,8 @@ package com.hackathon.learningmanagement.service;
 
 import java.util.List;
 
-import org.springframework.web.bind.annotation.RequestParam;
-
-
 import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
-
 import com.hackathon.learningmanagement.dto.TrainingHistoryDto;
-
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.CourseDetails;
 import com.hackathon.learningmanagement.entity.UserRegistration;

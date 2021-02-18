@@ -153,7 +153,8 @@ public class LearningServiceImpl implements LearningService {
 
 		return enrollmentDto;
 	}
-	public List<TrainingHistoryDto> getTrainingHistory(Long userId) {
+
+	public List<TrainingHistoryDto> getTrainingHistory(Long userId) throws NotFoundException {
 
 		List<TrainingHistoryDto> trainingHistoryDtoList = new ArrayList<>();
 		List<EnrollmentDetails> enrollmentList = enrollmentRepository.getTrainingHistoryByUserId(userId);
@@ -165,9 +166,9 @@ public class LearningServiceImpl implements LearningService {
 				trainingHistoryDto.setEnrollmentId(enrollment.getEnrollmentId());
 				trainingHistoryDtoList.add(trainingHistoryDto);
 			}
+		} else {
+			throw new NotFoundException("Training history not found!!");
 		}
-
 		return trainingHistoryDtoList;
-
 	}
 }

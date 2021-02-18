@@ -6,13 +6,16 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.hackathon.learningmanagement.dto.TrainingHistoryDto;
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.Category;
 import com.hackathon.learningmanagement.entity.CourseDetails;
+import com.hackathon.learningmanagement.entity.EnrollmentDetails;
 import com.hackathon.learningmanagement.entity.UserRegistration;
 import com.hackathon.learningmanagement.exception.NotFoundException;
 import com.hackathon.learningmanagement.repository.CategoryRepository;
 import com.hackathon.learningmanagement.repository.CourseRepository;
+import com.hackathon.learningmanagement.repository.EnrollmentRepository;
 import com.hackathon.learningmanagement.repository.UserRepository;
 import com.hackathon.learningmanagement.service.LearningService;
 
@@ -27,6 +30,9 @@ public class LearningServiceImpl implements LearningService {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+	
+	@Autowired
+	EnrollmentRepository enrollmentRepository;
 
 	@Override
 	public UserRegistrationDto registerUser(UserRegistration userRegistration) {
@@ -76,5 +82,23 @@ public class LearningServiceImpl implements LearningService {
 			}
 			return courseDetailsList;
 		}
+	}
+
+	@Override
+	public List<TrainingHistoryDto> getTrainingHistory(Long userId) {
+
+		List<TrainingHistoryDto> trainingHistoryDtoList = new ArrayList<>();
+		List<EnrollmentDetails> enrollmentList = enrollmentRepository.getTrainingHistoryByUserId(userId);
+
+		if (!enrollmentList.isEmpty()) {
+			for (EnrollmentDetails enrollment : enrollmentList) {
+				TrainingHistoryDto trainingHistoryDto = new TrainingHistoryDto();
+				trainingHistoryDto.setCourseId(enrollment.getCourseDetails().getCourseId());
+				trainingHistoryDto.setEnrollmentId(enrollment.getEnrollmentId());
+				trainingHistoryDtoList.add(trainingHistoryDto);
+			}
+		}
+
+		return trainingHistoryDtoList;
 	}
 }

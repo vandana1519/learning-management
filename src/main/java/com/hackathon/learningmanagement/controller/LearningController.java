@@ -12,7 +12,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+
 import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
+
+import com.hackathon.learningmanagement.dto.TrainingHistoryDto;
+
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.CourseDetails;
 import com.hackathon.learningmanagement.entity.EnrollmentDetails;
@@ -63,4 +67,13 @@ public class LearningController {
 		}
 		return new ResponseEntity<>(dto, HttpStatus.CREATED);
 	}
+	
+	@GetMapping(value = "/history/{userId}")
+	public ResponseEntity<List<TrainingHistoryDto>> getTrainingHistory(@PathVariable("userId") Long userId) throws NotFoundException{
+	
+			return  new ResponseEntity<>(learningService.getTrainingHistory(userId),HttpStatus.OK);
+		
+	}
+	
+	
 }

@@ -9,8 +9,12 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+
 import com.hackathon.learningmanagement.constants.AppConstants;
 import com.hackathon.learningmanagement.dto.CourseEnrollmentDto;
+
+import com.hackathon.learningmanagement.dto.TrainingHistoryDto;
+
 import com.hackathon.learningmanagement.dto.UserRegistrationDto;
 import com.hackathon.learningmanagement.entity.Category;
 import com.hackathon.learningmanagement.entity.CourseDetails;
@@ -34,6 +38,9 @@ public class LearningServiceImpl implements LearningService {
 
 	@Autowired
 	CategoryRepository categoryRepository;
+	
+	@Autowired
+	EnrollmentRepository enrollmentRepository;
 
 	@Autowired
 	EnrollmentRepository enrollmentRepository;
@@ -89,6 +96,7 @@ public class LearningServiceImpl implements LearningService {
 	}
 
 	@Override
+
 	public CourseEnrollmentDto enrollCourse(Long userId, Long courseId) throws NotFoundException {
 		EnrollmentDetails enrollmentDetails = new EnrollmentDetails();
 		CourseEnrollmentDto enrollmentDto = new CourseEnrollmentDto();
@@ -147,5 +155,22 @@ public class LearningServiceImpl implements LearningService {
 		}
 
 		return enrollmentDto;
+
+	public List<TrainingHistoryDto> getTrainingHistory(Long userId) {
+
+		List<TrainingHistoryDto> trainingHistoryDtoList = new ArrayList<>();
+		List<EnrollmentDetails> enrollmentList = enrollmentRepository.getTrainingHistoryByUserId(userId);
+
+		if (!enrollmentList.isEmpty()) {
+			for (EnrollmentDetails enrollment : enrollmentList) {
+				TrainingHistoryDto trainingHistoryDto = new TrainingHistoryDto();
+				trainingHistoryDto.setCourseId(enrollment.getCourseDetails().getCourseId());
+				trainingHistoryDto.setEnrollmentId(enrollment.getEnrollmentId());
+				trainingHistoryDtoList.add(trainingHistoryDto);
+			}
+		}
+
+		return trainingHistoryDtoList;
+
 	}
 }
